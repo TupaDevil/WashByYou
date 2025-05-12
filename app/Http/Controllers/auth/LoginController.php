@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -16,19 +17,22 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'login' => 'required|string',
             'password' => 'required',
+        ], [
+            'login.required' => 'Поле "Логин" обязательно.',
+            'password.required' => 'Поле "Пароль" обязательно.',
         ]);
 
         // Попытка логина
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt(['login' => $credentials['login'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
-            return redirect()->route('orders.index')->with('success', 'Вы успешно вошли!');
+            return redirect()->route('order')->with('success', 'Вы успешно вошли!');
         }
 
         return back()->withErrors([
-            'email' => 'Неверный email или пароль.',
-        ])->onlyInput('email');
+            'login' => 'Неверный логин или пароль.',
+        ])->onlyInput('login');
     }
 
     // Выход

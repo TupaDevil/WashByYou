@@ -9,10 +9,17 @@
              </button>
              <div class="collapse navbar-collapse me-auto" id="navbarNavAltMarkup">
                <div class="navbar-nav ms-auto">
-                 <a class="nav-link me-4" href="{{ Route ('register.create')}}">Регистрация</a>
-                 <a class="nav-link me-4" href="{{ Route ('login')}}">Войти</a>
-                 <a class="nav-link me-4" href="{{ Route ('makeOrder.create')}}">Заказать услуги</a>
-                 <a class="nav-link me-4" href="{{ Route('order')}}">Ваш кабинет</a>
+                 @guest
+                     <a class="nav-link me-4" href="{{ route('register.create') }}">Регистрация</a>
+                     <a class="nav-link me-4" href="{{ route('login') }}">Войти</a>
+                 @else
+                     <a class="nav-link me-4" href="{{ route('makeOrder.create') }}">Заказать услуги</a>
+                     <a class="nav-link me-4" href="{{ route('order') }}">Ваш кабинет</a>
+                     <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                         @csrf
+                         <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                     </form>
+                 @endguest
                </div>
              </div>
            </div>

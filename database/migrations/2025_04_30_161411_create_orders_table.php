@@ -28,7 +28,9 @@ return new class extends Migration
                 'post_construction_cleaning',
                 'carpet_furniture_cleaning'
             ]);
-            $table ->enum ('payment_type', ['cash', 'card']);
+            $table->enum('payment_type', ['cash', 'card']);
+            $table->enum('status', ['new', 'in_progress', 'completed', 'cancelled'])->default('new');
+            $table->text('cancel_reason')->nullable();
             $table->timestamps();
         });
     }

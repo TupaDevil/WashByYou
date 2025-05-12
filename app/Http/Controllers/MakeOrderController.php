@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class MakeOrderController extends Controller
 {
@@ -37,8 +38,8 @@ class MakeOrderController extends Controller
             // Объединяем дату и время
             $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $validated['service_date'] . ' ' . $validated['service_time'])->format('Y-m-d H:i:s');
 
-            // Создаём запись
-            Order::create([
+            // Создаём запись с привязкой к пользователю
+            $order = Auth::user()->orders()->create([
                 'full_name' => $validated['full_name'],
                 'phone_number' => $validated['phone_number'],
                 'email' => $validated['email'],
@@ -48,5 +49,6 @@ class MakeOrderController extends Controller
                 'payment_type' => $validated['payment_type'],
             ]);
             
-            }
+            return redirect()->route('order')->with('success', 'Заказ успешно создан!');
         }
+    }
